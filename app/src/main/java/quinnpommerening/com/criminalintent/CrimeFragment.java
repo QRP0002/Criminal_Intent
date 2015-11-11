@@ -3,6 +3,7 @@ package quinnpommerening.com.criminalintent;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 
@@ -27,6 +29,7 @@ public class CrimeFragment extends Fragment {
 
     private static final String TAG = "CrimeFragment";
     public static final String EXTRA_CRIME_ID = "com.quinnpommerening.criminalintent.crime_id";
+    private static final String DIALOG_DATE = "date";
 
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle args = new Bundle();
@@ -69,9 +72,14 @@ public class CrimeFragment extends Fragment {
         });
 
         mDateButton = (Button) v.findViewById(R.id.crime_date);
-        Date date = mCrime.getmDate();
-        mDateButton.setText(DateFormat.getLongDateFormat(getActivity()).format(date));
-        mDateButton.setEnabled(false);
+        mDateButton.setText(mCrime.getmDate().toString());
+        mDateButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View V) {
+                FragmentManager fm = getFragmentManager();
+                DatePickerFragment dialog = new DatePickerFragment();
+                dialog.show(fm, DIALOG_DATE);
+            }
+        });
 
         mSolvedCheckBox = (CheckBox) v.findViewById(R.id.crime_solved);
         mSolvedCheckBox.setChecked(mCrime.ismSolved());
